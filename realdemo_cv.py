@@ -1,18 +1,18 @@
 """
-Benchmark file that executes both winlogistic and sklearn logistic classifier
-and compares the result.
-Dataset used is the spam dataset.
+Demo file on real-world data.
+Runs logistic regression from winlogistic on the spam dataset.
+Visualizes the preprocess
+regularization constant, lambda, is obtained from cross validation.
 """
 
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing
 from sklearn.exceptions import DataConversionWarning
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 import warnings
 
-import winlogistic as w
+from winlogistic import winlogistic as w
 
 warnings.filterwarnings(action='ignore', category=DataConversionWarning)
 
@@ -31,7 +31,15 @@ X_test = scaler.transform(X_test)
 # initialize parameters
 beta_init = np.zeros(X_train.shape[1])[:, np.newaxis]
 theta_init = np.zeros(X_train.shape[1])[:, np.newaxis]
-lambduh = 1
+
+# pick a few values of lambda as candidates
+print("Best value of lambda is chosen from [0.001, 0.01, 0.1, 1, 2, 3, 5, 10]")
+lam_set = [0.001, 0.01, 0.1, 1, 2, 3, 5, 10]
+
+# use crossval to attempt all the lambda values
+lambduh = w.crossval(X_train, y_train, lam_set)
+
+# initialize stepsize for final fast gradient with best lambda
 stepsize = w.getstepsize(X_train, lambduh)
 
 # run fast gradient
@@ -41,18 +49,5 @@ train_me = fg[3]
 print("Finished training model after %i iterations" % ite)
 print("Misclassification error on training set is %f" % train_me)
 
-# obtain beta for scoring
-fg_beta = fg[0]
-winlogscore = 1 - w.misclassificationerror(X_test, y_test, fg_beta)
-
-# initialize skleanr classifier
-clf = LogisticRegression(solver='lbfgs')
-clf.fit(X_train, y_train)
-
-# get sklearn score
-sklscore = clf.score(X_test, y_test)
-
-print("dataset used: spam dataset")
-print("lambda for winlogistic is 1, C for sklearn is 1")
-print("winlogistic's score on test set is %f" % winlogscore)
-print("sklearn's score on test set is %f" % sklscore)
+# visualize the training process
+w.visualize(X_train, y_train, X_test, y_test, lambduh, fg[1], fg[2])

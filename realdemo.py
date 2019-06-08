@@ -1,18 +1,18 @@
 """
-Benchmark file that executes both winlogistic and sklearn logistic classifier
-and compares the result.
-Dataset used is the spam dataset.
+Demo file on real-world data.
+Runs logistic regression from winlogistic on the spam dataset.
+Visualizes the preprocess
+regularization constant, lambda, is 1.
 """
 
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing
 from sklearn.exceptions import DataConversionWarning
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 import warnings
 
-import winlogistic as w
+from winlogistic import winlogistic as w
 
 warnings.filterwarnings(action='ignore', category=DataConversionWarning)
 
@@ -41,18 +41,5 @@ train_me = fg[3]
 print("Finished training model after %i iterations" % ite)
 print("Misclassification error on training set is %f" % train_me)
 
-# obtain beta for scoring
-fg_beta = fg[0]
-winlogscore = 1 - w.misclassificationerror(X_test, y_test, fg_beta)
-
-# initialize skleanr classifier
-clf = LogisticRegression(solver='lbfgs')
-clf.fit(X_train, y_train)
-
-# get sklearn score
-sklscore = clf.score(X_test, y_test)
-
-print("dataset used: spam dataset")
-print("lambda for winlogistic is 1, C for sklearn is 1")
-print("winlogistic's score on test set is %f" % winlogscore)
-print("sklearn's score on test set is %f" % sklscore)
+# visualize the training process
+w.visualize(X_train, y_train, X_test, y_test, lambduh, fg[1], fg[2])

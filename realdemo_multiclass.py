@@ -13,7 +13,7 @@ from sklearn.exceptions import DataConversionWarning
 from sklearn.model_selection import train_test_split
 import warnings
 
-import winlogistic as w
+from winlogistic import winlogistic as w
 
 warnings.filterwarnings(action='ignore', category=DataConversionWarning)
 # simulating data with 2 classes

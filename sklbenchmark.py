@@ -12,7 +12,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 import warnings
 
-import winlogistic as w
+from winlogistic import winlogistic as w
 
 warnings.filterwarnings(action='ignore', category=DataConversionWarning)
 
