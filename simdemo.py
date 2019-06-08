@@ -10,7 +10,7 @@ import pandas as pd
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
-from winlogistic import winlogistic as w
+import winlogistic as w
 
 # simulating data with 2 classes
 X_master, y_master = w.sim_data()
